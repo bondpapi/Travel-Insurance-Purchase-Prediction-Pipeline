@@ -89,12 +89,8 @@ See `requirements.txt` for all used packages and versions.
 This project is for academic and educational purposes.
 
 ---
-**Author:** Michael Bond
-
-**Date:** April 2025
-
-
 
 ## Author
 Created by [Michael Bond / https://github.com/bondpapi]
 
+**Date:** April 2025
