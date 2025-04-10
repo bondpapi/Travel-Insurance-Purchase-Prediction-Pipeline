@@ -1,96 +1,105 @@
-# Travel Insurance Prediction
+#  Travel Insurance Prediction
 
-## Overview
-This project aims to build an intelligent machine learning model that predicts whether a customer will be interested in purchasing a travel insurance package. The data is based on historical offerings by a tour and travel company, including a COVID coverage extension.
+##  Overview
+This project builds a robust machine learning model to predict whether a customer is likely to purchase a travel insurance package, based on their demographic and behavioral attributes. The dataset reflects offerings from a tour and travel company in India and includes coverage against COVID.
 
-## Objective
-To classify customers who are likely to purchase travel insurance using demographic and behavioral features. This helps the company target potential customers more effectively.
+##  Objective
+To classify potential customers who are more likely to buy travel insurance. The goal is to assist the company in optimizing its marketing strategy by targeting the right audience.
 
-## Dataset
-The dataset consists of ~2000 customers and includes the following features:
+##  Dataset
+The dataset includes ~2,000 previous customers with the following features:
 
 - `Age`: Age of the customer
-- `Employment Type`: Sector of employment
-- `GraduateOrNot`: Graduation status
-- `AnnualIncome`: Yearly income in INR
-- `FamilyMembers`: Number of members in the family
-- `ChronicDiseases`: Presence of major chronic diseases
-- `FrequentFlyer`: Whether the customer frequently flies
-- `EverTravelledAbroad`: Has the customer ever travelled abroad
-- `TravelInsurance`: Target variable (1 = bought insurance, 0 = did not buy)
+- `Employment Type`: Government or Private/Self-employed
+- `GraduateOrNot`: Whether the customer is a college graduate
+- `AnnualIncome`: Annual income in INR (rounded to nearest ₹50,000)
+- `FamilyMembers`: Total family members
+- `ChronicDiseases`: Presence of any major chronic diseases
+- `FrequentFlyer`: Customer has flown ≥4 times in last 2 years
+- `EverTravelledAbroad`: Whether customer has travelled internationally
+- `TravelInsurance`: Target (1 = purchased insurance, 0 = did not)
 
-## Methodology
+##  Methodology
 
-### 1. Data Cleaning & Preprocessing
-- Categorical encoding using `LabelEncoder`
-- Handling class imbalance using **SMOTE**
-- Standard scaling of features
+### 1. 🧹 Data Cleaning & Preprocessing
+- Removed **738 duplicate rows**
+- Binary and nominal encoding of categorical features
+- Combined multiple levels of `ChronicDiseases` into a binary indicator
+- Feature scaling for models like Logistic Regression
+- **No SMOTE used**; `scale_pos_weight` in XGBoost is used to handle imbalance
 
-### 2. Exploratory Data Analysis (EDA)
-- Univariate & bivariate analysis
-- Class distribution & imbalance check
-- Correlation heatmap
-- Multicollinearity analysis using **VIF and Tolerance**
+### 2.  Exploratory Data Analysis (EDA)
+- Univariate and bivariate distribution plots
+- Annotated bar plots for class comparisons
+- Correlation heatmap and VIF for multicollinearity checks
 
-### 3. Modeling
-We implemented and evaluated several classification models:
-
+### 3.  Modeling
+Built and evaluated multiple models:
 - Logistic Regression
 - Random Forest
-- XGBoost
+- XGBoost (with `scale_pos_weight`)
 - Gradient Boosting
-- Stacked Ensemble (base: RF, GB; meta: XGBoost)
+- **Stacked Ensemble**:
+  - Base models: Logistic Regression, RF, GB
+  - Meta-learner: XGBoost
 
-### 4. Hyperparameter Tuning
-- Used **Bayesian Optimization** for optimal XGBoost parameters
-- Final meta-learner trained with tuned parameters in the stacking classifier
+### 4.  Hyperparameter Tuning
+- Bayesian Optimization using `BayesSearchCV`
+- Tuned meta-learner with best-found parameters
 
-### 5. Evaluation Metrics
+### 5.  Evaluation Metrics
 - Confusion Matrix
-- Precision, Recall, F1-Score (macro, weighted)
+- Precision, Recall, F1-Score (focus on **weighted average** due to class imbalance)
 - ROC AUC Score
 - 5-Fold Stratified Cross-Validation
 
-### 6. Threshold Optimization
-- Adjusted classification threshold from default (0.5) to best-performing based on ROC curve
+### 6.  Threshold Tuning
+- Optimized decision threshold to improve F1-score
+- Evaluated model performance across thresholds 0.1–0.9
 
-### 7. Feature Importance
-- Gain-based importance from tuned XGBoost meta-learner revealed:
-  - Top predictors: **AnnualIncome**, **EverTravelledAbroad**, **FamilyMembers**, **Age**, **FrequentFlyer**
+### 7.  Feature Importance
+- Gain-based feature importance from tuned XGBoost
+- **Top predictors**:
+  - `AnnualIncome`
+  - `EverTravelledAbroad`
+  - `FamilyMembers`
+  - `Age`
+  - `FrequentFlyer`
 
-## Results
-- Final stacked model (tuned + threshold optimized):
-  - **Accuracy**: 71.2%
-  - **AUC**: ~0.716
-  - **Weighted F1 Score**: ~0.702
+##  Results
 
-## Business Insight
-Customers with higher income, prior international travel, and chronic conditions are more likely to buy travel insurance. Targeting such customers can improve marketing efficiency and conversion.
+| Metric | Value |
+|--------|-------|
+| **Accuracy** | 73.6% |
+| **Weighted Precision** | 0.742 |
+| **Weighted Recall** | 0.736 |
+| **Weighted F1-score** | 0.738 |
+| **ROC AUC (Test)** | 0.789 |
+| **Cross-Validated ROC AUC** | 0.763 ± 0.033 |
 
-## Project Structure
-```
-travel_insurance_prediction/
-├── TravelInsurancePrediction.csv
-├── TravelInsurancePrediction.ipynb
-├── requirements.txt
-└── README.md
-```
+##  Business Insight
+Customers more likely to purchase insurance:
+- Earn higher incomes
+- Have travelled abroad
+- Belong to smaller families
+- Are frequent flyers
 
-## How to Run
-1. Clone this repo
-2. Create and activate virtual environment
-3. Run: `pip install -r requirements.txt`
-4. Open the notebook: `TravelInsurancePrediction.ipynb`
+**Strategic targeting** of these segments can improve marketing ROI and conversion rates.
 
-## Dependencies
-See `requirements.txt` for all used packages and versions.
+##  How to Run
 
-## License
-This project is for academic and educational purposes.
+1. Clone the repository  
+2. Create and activate a virtual environment  
+3. Run `pip install -r requirements.txt`  
+4. Launch the notebook: `TravelInsurancePrediction.ipynb`
 
----
+## 🧩 Dependencies
+See `requirements.txt` for complete package list and versions.
 
-## Author
-Created by [Michael Bond / https://github.com/bondpapi]
+##  License
+This project is for academic and educational purposes only.
 
-**Date:** April 2025
+##  Author
+Created by **[Michael Bond](https://github.com/bondpapi)**  
+📅 April 2025
+"""
